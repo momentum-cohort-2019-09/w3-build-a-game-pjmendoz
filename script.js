@@ -2,29 +2,41 @@ class Game {
     constructor(gameScreen){
         const canvas = document.getElementById(gameScreen)
         this.square = canvas.getContext('2d')
-        this.player= canvas.getContext('2d')
-        this.coin = canvas.getContext('2d')
+        this.size = { width: canvas.width, height: canvas.height };
+        this.bodies = [];
+
+        let playerLocation = {x: 210, y: 190}
+
+        let playerSize = { width: 50, height: 50}
+        this.player = new Player(playerLocation, playerSize)
+        this.addBody(this.player)
     }
-    update() {
-        this.fillBackground()
-        this.person()
-        this.point()
-    }    
-    fillBackground() {
+    addBody (body) {
+        this.bodies.push(body);
+    }  
+    run () {
+        this.draw();
+    }
+    draw () {
         this.square.fillStyle= '#DAF7A6';
         this.square.fillRect(200, 180, 200, 200);
+
+        for (let body of this.bodies) {
+            body.draw(this.square)
+        }
     }
-    person(){
-        this.player.clearRect (0, 0, 200, 200)
-        this.player.fillStyle= '#581845'
-        this.player.fillRect(210, 190, 50, 50)
+}
+
+class Player {
+    constructor(location, size) {
+        this.location = location
+        this.size = size
     }
-    point() {
-        this.player.clearRect (0, 0, 200, 200)
-        this.coin.fillStyle = '#FFC300'
-        this.coin.fillRect(210, 250, 10, 10)
+    draw(square) {
+        square.fillStyle = '#581845';
+        square.fillRect(this.location.x, this.location.y, this.size.width, this.size.height)
     }
 }
 
 let game = new Game("gameScreen")
-game.update()
+game.run()
